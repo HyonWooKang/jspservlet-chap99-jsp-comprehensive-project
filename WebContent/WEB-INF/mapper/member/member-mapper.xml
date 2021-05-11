@@ -25,4 +25,28 @@
 	     WHERE A.MEMBER_STATUS = 'Y'
 	       AND A.MEMBER_ID = ?
 	</entry>
+	
+	<entry key="insertMember">
+		INSERT
+		  INTO TBL_MEMBER A
+		(
+		  A.MEMBER_NO
+		, A.MEMBER_ID
+		, A.MEMBER_PWD
+		, A.NICKNAME
+		, A.PHONE
+		, A.EMAIL
+		, A.ADDRESS
+		)
+		VALUES
+		(
+		  SEQ_MEMBER_NO.NEXTVAL
+		, ?
+		, ?
+		, ?
+		, ?
+		, ?
+		, ?
+		)
+	</entry>
 </properties>

@@ -114,4 +114,40 @@ public class MemberDAO {
 		return loginMember;
 	}
 
+
+	/**
+	 * MEMBER TABLE 신규 회원 insert용 메소드
+	 * @param con
+	 * @param requestMember
+	 * @return
+	 */
+	public int insertMember(Connection con, MemberDTO requestMember) {
+		
+		// sql inject 공격 처리를 위해 데이터를 PrepareStatement 사용
+		PreparedStatement pstmt = null;
+		
+		int result = 0;
+		
+		String query = prop.getProperty("insertMember");
+		
+		try {
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, requestMember.getId());
+			pstmt.setString(2, requestMember.getPwd());
+			pstmt.setString(3, requestMember.getNickname());
+			pstmt.setString(4, requestMember.getPhone());
+			pstmt.setString(5, requestMember.getEmail());
+			pstmt.setString(6, requestMember.getAddress());
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
 }

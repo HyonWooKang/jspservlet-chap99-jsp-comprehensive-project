@@ -7,6 +7,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.greedy.jsp.member.model.dao.MemberDAO;
 import com.greedy.jsp.member.model.dto.MemberDTO;
 import static com.greedy.jsp.common.jdbc.jdbcTemplate.getConnection;
+import static com.greedy.jsp.common.jdbc.jdbcTemplate.commit;
+import static com.greedy.jsp.common.jdbc.jdbcTemplate.rollback;
 
 public class MemberService {
 
@@ -18,6 +20,9 @@ public class MemberService {
 	public MemberService() {
 		memberDAO = new MemberDAO();
 	}
+	/* 주소 값이 하나만 생성되어 닫기 전까지 하나로 유지되고
+	 * 닫아버리면 외부에서 변조를 위해 접근해도 접속이 되지 않음
+	 */
 	
 	public MemberDTO loginCheck(MemberDTO requestMember) {
 		
@@ -42,6 +47,27 @@ public class MemberService {
 		}
 		
 		return loginMember;
+	}
+
+	/**
+	 * 회원가입용 메소드
+	 * @param requestMember
+	 * @return
+	 */
+	public int registMember(MemberDTO requestMember) {
+		
+		Connection con = getConnection();
+		
+		int result = memberDAO.insertMember(con, requestMember);
+		
+		/* insert, update, delete의 경우에는 실행 결과에 따라서 transaction 처리 */
+		if(result > 0) {
+			commit(con);
+		} else {
+			rollback(con);
+		}
+		
+		return result;
 	}
 	
 	
