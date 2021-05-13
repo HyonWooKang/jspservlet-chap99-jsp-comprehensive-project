@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment/>
+	<entry key="selectTotalCount">
+    	SELECT
+    	       COUNT(*)
+    	  FROM TBL_BOARD A
+    	 WHERE A.BOARD_STATUS = 'Y'
+	</entry>
+	
+	<entry key="selectBoardList">
+		SELECT 
+               A.RNUM
+             , A.BOARD_NO
+             , A.BOARD_TYPE
+             , A.CATEGORY_CODE
+             , A.CATEGORY_NAME
+             , A.BOARD_TITLE
+             , A.BOARD_BODY
+             , A.BOARD_WRITER_MEMBER_NO
+             , A.NICKNAME
+             , A.BOARD_COUNT
+             , A.CREATED_DATE
+             , A.BOARD_STATUS
+          FROM (SELECT ROWNUM RNUM
+                     , B.BOARD_NO
+                     , B.BOARD_TYPE
+                     , B.CATEGORY_CODE
+                     , B.CATEGORY_NAME
+                     , B.BOARD_TITLE
+                     , B.BOARD_BODY
+                     , B.BOARD_WRITER_MEMBER_NO
+                     , B.NICKNAME
+                     , B.BOARD_COUNT
+                     , B.CREATED_DATE
+                     , B.BOARD_STATUS
+                  FROM (SELECT C.BOARD_NO
+                             , C.BOARD_TYPE
+                             , C.CATEGORY_CODE
+                             , D.CATEGORY_NAME
+                             , C.BOARD_TITLE
+                             , C.BOARD_BODY
+                             , C.BOARD_WRITER_MEMBER_NO
+                             , E.NICKNAME
+                             , C.BOARD_COUNT
+                             , C.CREATED_DATE
+                             , C.BOARD_STATUS
+                          FROM TBL_BOARD C
+                          JOIN TBL_CATEGORY D ON (C.CATEGORY_CODE = D.CATEGORY_CODE)
+                          JOIN TBL_MEMBER E ON(C.BOARD_WRITER_MEMBER_NO = E.MEMBER_NO)
+                         WHERE C.BOARD_STATUS = 'Y'
+                         ORDER BY C.BOARD_NO DESC
+                        ) B
+               ) A
+         WHERE A.RNUM BETWEEN ? AND ?
+	</entry>
+
+</properties>
+
+
+
+
+
+
+
+
+
+
